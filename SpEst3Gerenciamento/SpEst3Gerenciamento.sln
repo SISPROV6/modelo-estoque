@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34301.259
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpEst3Gerenciamento", "SpEst3Gerenciamento\SpEst3Gerenciamento.csproj", "{DDCE830B-F56E-4EEA-8C2B-502ACD822D7C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DDCE830B-F56E-4EEA-8C2B-502ACD822D7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDCE830B-F56E-4EEA-8C2B-502ACD822D7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDCE830B-F56E-4EEA-8C2B-502ACD822D7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDCE830B-F56E-4EEA-8C2B-502ACD822D7C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4AA635E8-D427-4FF8-9E6C-743469C12799}
+	EndGlobalSection
+EndGlobal
