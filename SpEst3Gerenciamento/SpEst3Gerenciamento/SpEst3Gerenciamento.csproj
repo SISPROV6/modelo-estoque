@@ -7,8 +7,8 @@
     <ProjectGuid>{DDCE830B-F56E-4EEA-8C2B-502ACD822D7C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SpEst3Gerenciamento</RootNamespace>
-    <AssemblyName>SpEst3Gerenciamento</AssemblyName>
+    <RootNamespace>SpEst3Gerenciamento12</RootNamespace>
+    <AssemblyName>SpEst3Gerenciamento12</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
