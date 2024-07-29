@@ -103,15 +103,16 @@ namespace SpEst3Gerenciamento12.RegraNegocio
 			                    TIPOPESSOA_CD
 
                     FROM		EST_PESSOA
-                    --WHERE		TENANT_ID = @TenantID
-                      WHERE		(	TX_NOMEPESSOA LIKE @Pesquisa OR
+                    WHERE		TENANT_ID = @TenantID
+                      AND		(	TX_NOMEPESSOA LIKE @Pesquisa OR
 				                    TX_DOCUMENTO LIKE @Pesquisa )
+                      AND       IS_ACTIVE = 1
                 ";
 
                 this._dalBase.ClearParameters();
 
                 this._dalBase.CreateParameter("@TenantID", DbType.Int64, ApplicationSession.Get.TenantId);
-                this._dalBase.CreateParameter("@Pesquisa", DbType.String, pesquisa);
+                this._dalBase.CreateParameter("@Pesquisa", DbType.String, $"%{pesquisa}%");
 
                 DataTable dataTable = this._dalBase.Query(command);
 
@@ -126,6 +127,51 @@ namespace SpEst3Gerenciamento12.RegraNegocio
                             AdditionalStringProperty1 = this._dalBase.GetColToString(row, "TX_DOCUMENTO"),
                             AdditionalStringProperty2 = this._dalBase.GetColToString(row, "TIPOPESSOA_CD"),
                         };
+
+                        recordsList.Add(record);
+                    }
+                }
+
+                return recordsList;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public List<GUIDRecordCombobox> GetPapeisPessoaCombobox(string pesquisa)
+        {
+            List<GUIDRecordCombobox> recordsList = new List<GUIDRecordCombobox>();
+
+            try
+            {
+                this._dalBase.Source = Utils.GetMethodDescription(System.Reflection.MethodBase.GetCurrentMethod());
+
+                string command = $@"
+                    SELECT		CD_PAPEL,
+			                    TX_NOME
+                    FROM		EST_PAPEL
+                    WHERE		TX_NOME LIKE @Pesquisa
+                    ORDER BY	TX_NOME ASC
+                ";
+
+                this._dalBase.ClearParameters();
+                this._dalBase.CreateParameter("@Pesquisa", DbType.String, $"%{pesquisa}%");
+
+                DataTable dataTable = this._dalBase.Query(command);
+
+                if (!this._dalBase.DataTableIsEmpty(dataTable))
+                {
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        GUIDRecordCombobox record = new GUIDRecordCombobox
+                        {
+                            ID = this._dalBase.GetColToString(row, "CD_PAPEL"),
+                            LABEL = this._dalBase.GetColToString(row, "TX_NOME")
+                        };
+
+                        recordsList.Add(record);
                     }
                 }
 

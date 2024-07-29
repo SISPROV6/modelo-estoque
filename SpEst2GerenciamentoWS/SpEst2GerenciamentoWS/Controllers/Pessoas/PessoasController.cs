@@ -162,6 +162,66 @@ namespace SpEst2GerenciamentoWS.Controllers.Pessoas
 
             return Ok(ret);
         }
+        [Route("GetPapeisPessoaCombobox")]
+        [HttpGet]
+        [ResponseType(typeof(RetGUIDRecordsCombobox))]
+        [SwaggerResponse(HttpStatusCode.OK, "Execução com sucesso.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Erro de parâmetros.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro de servidor.")]
+        public IHttpActionResult GetPapeisPessoaCombobox(
+            [FromUri] string pesquisa = ""
+            )
+        {
+            long idLog = 0;
+
+            RetGUIDRecordsCombobox ret = new RetGUIDRecordsCombobox()
+            {
+                Error = false,
+                ErrorMessage = string.Empty
+            };
+
+            try
+            {
+                idLog = Log.LogWs.WriteLog(Session.DalConnections.DalBaseLog, System.Reflection.MethodBase.GetCurrentMethod());
+
+                Pessoas3Rn pessoasRn = new Pessoas3Rn(Session.DalConnections.DalBaseApl);
+                ret.Data = pessoasRn.GetPapeisPessoaCombobox(pesquisa);
+
+                Log.LogWs.WriteLogOk(Session.DalConnections.DalBaseLog, idLog);
+            }
+            catch (WebServiceException ex)
+            {
+                Log.LogWs.WriteLogError(Session.DalConnections.DalBaseLog, idLog, ex);
+
+                ret.Error = true;
+                ret.ErrorMessage = ex.Message;
+
+                // Erro de usuário recebe mensagem com status 200 (erro tratado)
+                if (ex.ErrorType == WebServiceExceptionType.USER_OK)
+                {
+                    return Content(HttpStatusCode.OK, ret);
+                }
+                // Erro de usuário recebe mensagem com status 400
+                if (ex.ErrorType == WebServiceExceptionType.USER_ERROR)
+                {
+                    return Content(HttpStatusCode.BadRequest, ret);
+                }
+                // Senão considera-se erro de servidor.
+                return Content(HttpStatusCode.InternalServerError, ret);
+            }
+            catch (Exception ex)
+            {
+                Log.LogWs.WriteLogError(Session.DalConnections.DalBaseLog, idLog, ex);
+
+                ret.Error = true;
+                ret.ErrorMessage = ex.Message;
+
+                // Erro tratado
+                return Content(HttpStatusCode.OK, ret);
+            }
+
+            return Ok(ret);
+        }
 
         #endregion GET
 

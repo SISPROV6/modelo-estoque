@@ -56,6 +56,16 @@ export class PessoasService {
     return this._httpClient.get<RetRecordsCombobox>(url, { 'params': params, 'headers': headers })
       .pipe(take(1), tap(response => this.showErrorMessage(response)) );
   }
+  public getPapeisPessoaCombobox(pesquisa: string): Observable<RetRecordsCombobox> {
+    const params = new HttpParams().set('pesquisa', pesquisa);
+
+    const headers = this._HTTP_HEADERS;
+    
+    const url = `${ this._BASE_URL }/GetPapeisPessoaCombobox`;
+
+    return this._httpClient.get<RetRecordsCombobox>(url, { 'params': params, 'headers': headers })
+      .pipe(take(1), tap(response => this.showErrorMessage(response)) );
+  }
   // #endregion GET
 
   // #region POST
