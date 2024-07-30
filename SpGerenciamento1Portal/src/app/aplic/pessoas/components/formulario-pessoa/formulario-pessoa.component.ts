@@ -35,6 +35,8 @@ export class FormularioPessoaComponent implements OnInit {
 
   public selectedPessoa: string;
   public selectedPapel: string;
+
+  public disabledInput: boolean = false;
   // #endregion PUBLIC
 
   // #endregion ==========> PROPERTIES <==========

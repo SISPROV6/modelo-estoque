@@ -5,7 +5,7 @@
       <div class="col-6">
          <lib-search-combobox [comboboxList]="$pessoasCombobox" [colorTheme]="'primary'" labelText="Pessoa<span class='text-danger'>*</span>"
             [mainInputPlaceholder]="'Selecione uma pessoa para ser vinculada'" [searchInputPlaceholder]="'Pesquisar por nome ou documento...'"
-            [initializedValueID]="selectedPessoa"
+            [initializedValueID]="selectedPessoa" [disabled]="true"
             (onReloadList)="getPessoasCombobox($event)" (onSelectItem)="selectedPessoa = $event">
          </lib-search-combobox>
       </div>
@@ -13,8 +13,8 @@
       <div class="col-6">
          <lib-search-combobox [comboboxList]="$papeisCombobox" [colorTheme]="'primary'" labelText="Papéis<span class='text-danger'>*</span>"
             [mainInputPlaceholder]="'Selecione um papel para vincular à Pessoa'" [searchInputPlaceholder]="'Pesquisar papel...'"
-            [initializedValueID]="selectedPapel"
-            (onReloadList)="getPessoasCombobox($event)" (onSelectItem)="selectedPessoa = $event">
+            [initializedValueID]="selectedPapel" [disabled]="disabledInput"
+            (onReloadList)="getPapeisPessoaCombobox($event)" (onSelectItem)="selectedPessoa = $event">
          </lib-search-combobox>
       </div>
    </div>

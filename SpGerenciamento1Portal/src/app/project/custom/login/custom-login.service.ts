@@ -31,15 +31,15 @@ export class CustomLoginService {
   }    
 
   public get loginDesenvDomain(): string {
-    return "sisproang";
+    return "ESTAGIOANG12";
   }    
 
   public get loginDesenvUser(): string {
-    return "visitante";
+    return "admin";
   }    
 
   public get loginDesenvPassword(): string {
-    return "visitante";
+    return "admin";
   }    
 
   // #endregion Propriedade Customizadas para o Componente login.component.ts
