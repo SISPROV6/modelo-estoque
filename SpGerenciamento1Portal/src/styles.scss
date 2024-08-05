@@ -4,6 +4,9 @@
 /* Importing Datepicker SCSS file. */
 @import "../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css";
 
+/* Importing toastr SCSS file. */
+@import "../node_modules/ngx-toastr/toastr.css";
+
 /* #region OVERRIDE BOOTSTRAP VARIABLES */
 
 /* #region SPACING */

@@ -20,27 +20,28 @@
       <div class="col-6 d-flex flex-row align-items-center justify-content-end">
         <ng-content></ng-content>
 
-        <div *ngIf="mode != 'list' && (buttonToOmit != 'Cancelar' && buttonToOmit != 'Todos')" class="d-flex flex-row align-items-center">
-          <a class="btn d-flex flex-row align-items-center btn-outline-primary" [class]="buttonToOmit === 'Salvar' ? 'ms-3' : 'mx-3'" (click)="return()">
-            <app-svg-storage svgName="fechar"></app-svg-storage>
-            <span class="ms-2">Cancelar</span>
-          </a>
-
-          <ng-container *ngIf="!showSpinner; else loading">
-            <a *ngIf="buttonToOmit != 'Todos' && buttonToOmit != 'Salvar'" class="btn btn-primary d-flex flex-row align-items-center me-0" [class]="useNewColors ? 'glb-btn-primary' : 'btn-primary'" (click)="mode == 'add' ? create() : update()">
-              <app-svg-storage svgName="disquete"></app-svg-storage>
-              <span class="ms-2 fw-bold"> {{ redirectTextByMode() }} </span>
+        <ng-container *ngIf="buttonToOmit != 'Todos'">
+          <div *ngIf="mode != 'list' && buttonToOmit != 'Cancelar'" class="d-flex flex-row align-items-center">
+            <a class="btn d-flex flex-row align-items-center btn-outline-primary" [class]="buttonToOmit === 'Salvar' ? 'ms-3' : 'mx-3'" (click)="return()">
+              <app-svg-storage svgName="fechar"></app-svg-storage>
+              <span class="ms-2">Cancelar</span>
             </a>
-          </ng-container>
-
-          <ng-template #loading>
-            <button class="btn btn-primary d-flex flex-row align-items-center me-0" type="button" [class]="useNewColors ? 'glb-btn-primary' : 'btn-primary'" disabled>
-              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-              <span class="ms-2 fw-bold"> Salvando... </span>
-            </button>
-          </ng-template>
-
-        </div>
+  
+            <ng-container *ngIf="!showSpinner; else loading">
+              <a *ngIf="buttonToOmit != 'Salvar'" class="btn btn-primary d-flex flex-row align-items-center me-0" [class]="useNewColors ? 'glb-btn-primary' : 'btn-primary'" (click)="mode == 'add' ? create() : update()">
+                <app-svg-storage svgName="disquete"></app-svg-storage>
+                <span class="ms-2 fw-bold"> {{ redirectTextByMode() }} </span>
+              </a>
+            </ng-container>
+  
+            <ng-template #loading>
+              <button class="btn btn-primary d-flex flex-row align-items-center me-0" type="button" [class]="useNewColors ? 'glb-btn-primary' : 'btn-primary'" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="ms-2 fw-bold"> Salvando... </span>
+              </button>
+            </ng-template>
+          </div>
+        </ng-container>
       </div>
     </div>
   

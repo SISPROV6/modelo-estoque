@@ -1,5 +1,5 @@
-export interface PasswordRecup {
+export interface NovaSenhaForm {
+    code: string;
     password: string;
     confirmPassword: string;
-    code: string;
 }

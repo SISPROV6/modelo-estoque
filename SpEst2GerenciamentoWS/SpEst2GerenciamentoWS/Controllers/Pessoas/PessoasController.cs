@@ -1,5 +1,7 @@
 ﻿using SpEst2GerenciamentoWS.Models.Pessoas;
 using SpEst3Gerenciamento12.RegraNegocio;
+using SpEst3Gerenciamento12.RegraNegocio.Models;
+using SpEstGerenciamento7Db.Database;
 using SpInfra4Generics.Generics.Models;
 using SpInfra4Generics.Models.Combobox;
 using SpInfra5WSUtils.Filters;
@@ -33,29 +35,80 @@ namespace SpEst2GerenciamentoWS.Controllers.Pessoas
 
         #region GET
 
-        [Route("GetPessoasList")]
+        [Route("Get")]
         [HttpGet]
-        [ResponseType(typeof(RetPessoas))]
+        [ResponseType(typeof(RetPessoa))]
         [SwaggerResponse(HttpStatusCode.OK, "Execução com sucesso.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Erro de parâmetros.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro de servidor.")]
-        public IHttpActionResult GetPessoasList(
-            [FromUri] bool isAtivo,
-            [FromUri] string pesquisa = ""
-            )
+        public IHttpActionResult Get([FromUri] string pessoaID)
         {
             long idLog = 0;
 
-            RetPessoas ret = new RetPessoas()
+            RetPessoa ret = new RetPessoa()
             {
                 Error = false,
                 ErrorMessage = string.Empty
             };
 
-            BasicFilters basicFilters = new BasicFilters()
+            try
             {
-                TEXTO_PESQUISA = pesquisa,
-                IS_ATIVO = isAtivo
+                idLog = Log.LogWs.WriteLog(Session.DalConnections.DalBaseLog, System.Reflection.MethodBase.GetCurrentMethod());
+
+                EstPessoa pessoasDb = new EstPessoa(Session.DalConnections.DalBaseApl);
+                ret.Data = pessoasDb.Get(pessoaID);
+
+                Log.LogWs.WriteLogOk(Session.DalConnections.DalBaseLog, idLog);
+            }
+            catch (WebServiceException ex)
+            {
+                Log.LogWs.WriteLogError(Session.DalConnections.DalBaseLog, idLog, ex);
+
+                ret.Error = true;
+                ret.ErrorMessage = ex.Message;
+
+                // Erro de usuário recebe mensagem com status 200 (erro tratado)
+                if (ex.ErrorType == WebServiceExceptionType.USER_OK)
+                {
+                    return Content(HttpStatusCode.OK, ret);
+                }
+                // Erro de usuário recebe mensagem com status 400
+                if (ex.ErrorType == WebServiceExceptionType.USER_ERROR)
+                {
+                    return Content(HttpStatusCode.BadRequest, ret);
+                }
+                // Senão considera-se erro de servidor.
+                return Content(HttpStatusCode.InternalServerError, ret);
+            }
+            catch (Exception ex)
+            {
+                Log.LogWs.WriteLogError(Session.DalConnections.DalBaseLog, idLog, ex);
+
+                ret.Error = true;
+                ret.ErrorMessage = ex.Message;
+
+                // Erro tratado
+                return Content(HttpStatusCode.OK, ret);
+            }
+
+            return Ok(ret);
+        }
+
+
+        [Route("GetPessoasList")]
+        [HttpPost]
+        [ResponseType(typeof(RetPessoasListModel))]
+        [SwaggerResponse(HttpStatusCode.OK, "Execução com sucesso.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Erro de parâmetros.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro de servidor.")]
+        public IHttpActionResult GetPessoasList([FromBody] PessoasFilters pessoasFilters)
+        {
+            long idLog = 0;
+
+            RetPessoasListModel ret = new RetPessoasListModel()
+            {
+                Error = false,
+                ErrorMessage = string.Empty
             };
 
             try
@@ -63,7 +116,8 @@ namespace SpEst2GerenciamentoWS.Controllers.Pessoas
                 idLog = Log.LogWs.WriteLog(Session.DalConnections.DalBaseLog, System.Reflection.MethodBase.GetCurrentMethod());
 
                 Pessoas3Rn pessoasRn = new Pessoas3Rn(Session.DalConnections.DalBaseApl);
-                ret.Data = pessoasRn.GetPessoasList(basicFilters);
+                ret.Data = pessoasRn.GetPessoasList(pessoasFilters, out ContagemPessoasCards contagemPessoasCards);
+                ret.contagemPessoasCards = contagemPessoasCards;
 
                 Log.LogWs.WriteLogOk(Session.DalConnections.DalBaseLog, idLog);
             }
@@ -162,6 +216,7 @@ namespace SpEst2GerenciamentoWS.Controllers.Pessoas
 
             return Ok(ret);
         }
+
         [Route("GetPapeisPessoaCombobox")]
         [HttpGet]
         [ResponseType(typeof(RetGUIDRecordsCombobox))]

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using SpEst3Gerenciamento12.RegraNegocio.Models;
 using SpEstGerenciamento7Db.Database;
 using SpInfra4Generics.Generics.Models;
 using SpInfra4Generics.Models.Combobox;
@@ -36,9 +38,10 @@ namespace SpEst3Gerenciamento12.RegraNegocio
         #region Public Methods
 
         #region GET
-        public List<EstPessoaRecord> GetPessoasList(BasicFilters basicFilters)
+        public List<PessoasListModel> GetPessoasList(PessoasFilters pessoasFilters, out ContagemPessoasCards contagemPessoasCards)
         {
-            List<EstPessoaRecord> recordsList = new List<EstPessoaRecord>();
+            List<PessoasListModel> recordsList = new List<PessoasListModel>();
+            contagemPessoasCards = new ContagemPessoasCards();
 
             try
             {
@@ -47,22 +50,36 @@ namespace SpEst3Gerenciamento12.RegraNegocio
                 string command = $@"
                     SELECT		TENANT_ID,
                                 ID_PESSOA,
-			                    TX_NOMEPESSOA,
-			                    TX_DOCUMENTO,
-			                    TIPOPESSOA_CD
+                                TX_NOMEPESSOA,
+                                TIPOPESSOA_CD,
+                                PAPEL_CD,
+                                TX_DOCUMENTO,
+                                DT_NASCIMENTO,
+                                DT_FUNDACAO,
+                                DT_INICIOVINCULO,
+                                DT_CRIACAO,
+                                DT_ULTIMAALTERACAO,
+                                IS_ACTIVE,
+                                IS_ESTRANGEIRO
 
                     FROM		EST_PESSOA
                     WHERE		TENANT_ID = @TenantID
                       AND		(	TX_NOMEPESSOA LIKE @Pesquisa OR
 				                    TX_DOCUMENTO LIKE @Pesquisa )
+
+                    {( pessoasFilters.TIPO == "" || pessoasFilters.TIPO == null ? "" : "AND     TIPOPESSOA_CD = @TipoPessoa" )}
+                    {( pessoasFilters.PAPEL == "" || pessoasFilters.PAPEL == null ? "" : "AND   PAPEL_CD = @PapelPessoa")}
+
                       AND       IS_ACTIVE = @IsAtivo
                 ";
 
                 this._dalBase.ClearParameters();
 
                 this._dalBase.CreateParameter("@TenantID", DbType.Int64, ApplicationSession.Get.TenantId);
-                this._dalBase.CreateParameter("@Pesquisa", DbType.String, basicFilters.TEXTO_PESQUISA);
-                this._dalBase.CreateParameter("@IsAtivo", DbType.Boolean, basicFilters.IS_ATIVO);
+                this._dalBase.CreateParameter("@Pesquisa", DbType.String, $"%{pessoasFilters.TEXTO_PESQUISA}%");
+                this._dalBase.CreateParameter("@IsAtivo", DbType.Boolean, pessoasFilters.IS_ATIVO);
+                this._dalBase.CreateParameter("@TipoPessoa", DbType.String, pessoasFilters.TIPO);
+                this._dalBase.CreateParameter("@PapelPessoa", DbType.String, pessoasFilters.PAPEL);
 
                 DataTable dataTable = this._dalBase.Query(command);
 
@@ -70,13 +87,32 @@ namespace SpEst3Gerenciamento12.RegraNegocio
                 {
                     foreach (DataRow row in dataTable.Rows)
                     {
-                        EstPessoaRecord record = new EstPessoaRecord
+                        PessoasListModel record = new PessoasListModel
                         {
+                            TENANT_ID = this._dalBase.GetColToLong(row, "TENANT_ID"),
                             ID_PESSOA = this._dalBase.GetColToString(row, "ID_PESSOA"),
                             TX_NOMEPESSOA = this._dalBase.GetColToString(row, "TX_NOMEPESSOA"),
-                            TENANT_ID = this._dalBase.GetColToLong(row, "TENANT_ID"),
+                            TIPOPESSOA_CD = this._dalBase.GetColToString(row, "TIPOPESSOA_CD"),
+                            PAPEL_CD = this._dalBase.GetColToString(row, "PAPEL_CD"),
+                            TX_DOCUMENTO = this._dalBase.GetColToString(row, "TX_DOCUMENTO"),
+                            DT_NASCIMENTO = this._dalBase.GetColToDateTime(row, "DT_NASCIMENTO"),
+                            DT_FUNDACAO = this._dalBase.GetColToDateTime(row, "DT_FUNDACAO"),
+                            DT_INICIOVINCULO = this._dalBase.GetColToDateTime(row, "DT_INICIOVINCULO"),
+                            DT_CRIACAO = this._dalBase.GetColToDateTime(row, "DT_CRIACAO"),
+                            DT_ULTIMAALTERACAO = this._dalBase.GetColToDateTime(row, "DT_ULTIMAALTERACAO"),
                             IS_ACTIVE = this._dalBase.GetColToBoolean(row, "IS_ACTIVE"),
+                            IS_ESTRANGEIRO = this._dalBase.GetColToBoolean(row, "IS_ESTRANGEIRO")
                         };
+
+                        recordsList.Add(record);
+
+                        contagemPessoasCards.TOTAL++;
+                        switch(this._dalBase.GetColToString(row, "PAPEL_CD"))
+                        {
+                            case "FOR": contagemPessoasCards.FORNECEDOR++; break;
+                            case "CLI": contagemPessoasCards.CLIENTE++; break;
+                            case "FUNC": contagemPessoasCards.FUNCIONARIO++; break;
+                        }
                     }
                 }
 

@@ -12,7 +12,7 @@ import { LoginForm } from './models/login-form';
 import { RetLogin } from './models/ret-login';
 import { PasswordRecup } from './models/password-recup';
 import { ForgottenPasswordForm } from './models/forgotten-password-form';
-import { RecupPasswordForm } from './models/recup-password-form';
+import { NovaSenhaForm } from './models/nova-senha-form';
 
 import { IpServiceService, RetError } from 'ngx-sp-infra';
 import { AuthStorageService } from './storage/auth-storage.service';
@@ -64,6 +64,26 @@ export class AuthService {
     });
   }
   
+  private geHostName(): string {
+    let product: string = window.location.pathname;
+
+    let index: number = product.indexOf("/auth/login");
+  
+    if (index != -1) {
+      product = product.substring(0, index);
+    } else {
+      product = "";
+    }
+    
+    let hostName: any = window.location.hostname.includes("localhost")
+      ? `http://${ window.location.hostname }`
+      : `https://${ window.location.hostname }`;
+  
+    hostName = hostName + product;   
+    
+    return hostName;
+  }
+
   // #endregion GET
   
   // #region POST
@@ -72,7 +92,7 @@ export class AuthService {
    * @param login Informações do formulário de login
    * @returns Observable com os dados do login realizado, seja erro ou sucesso
    */
-login(parmsLogin: LoginForm): Observable<RetLogin> {
+  public login(parmsLogin: LoginForm): Observable<RetLogin> {
     
     let login: Login = {
       usuario: parmsLogin.usuario,
@@ -80,7 +100,8 @@ login(parmsLogin: LoginForm): Observable<RetLogin> {
     }
 
     const params = new HttpParams()
-      .set('dominio', parmsLogin.dominio);
+      .set('dominio', parmsLogin.dominio)
+      .set('urlServidor', this.geHostName());
 
     const url = `${ this._BASE_URL }/ValidateLogin`;
 
@@ -96,32 +117,39 @@ login(parmsLogin: LoginForm): Observable<RetLogin> {
               throw Error(response.ErrorMessage);
             }
 
-            this._authStorageService.ignoreCheckLogin = true;
-            
-            this._authStorageService.isLoggedInSub.next(true);
-
-            this._authStorageService.ip = this.ip;
-            this._authStorageService.tenantId = response.TenantId;
-            this._authStorageService.infraUsuarioId = response.InfraUsuarioId;
-            this._authStorageService.infraEstabId = response.EstabelecimentoId;
-            this._authStorageService.infraEstabNome = response.NomeEstabelecimento;
-            this._authStorageService.user = login.usuario;
-            this._authStorageService.userName = response.UserName;
-            this._authStorageService.authToken = response.Token;
-            this._authStorageService.dominio = response.Dominio;
-            this._authStorageService.isExternalLogin = false;
-
-            // Método com customizações para inicializações do Login
-            this._customLoginService.authLogin();
-
-            if (this._authStorageService.urlRedirect == '' || this._authStorageService.urlRedirect == '/' || this._authStorageService.urlRedirect == '/auth/login') {
-              // Método com customizações para redirecionamento da tela inicial após login ok
-              this._customLoginService.authNavigateToPage(this._router);
+            if (response.InitializePassword) {
+              this._authStorageService.logout();
             } else {
-              this._router.navigate([this._authStorageService.urlRedirect]);
+              this._authStorageService.ignoreCheckLogin = true;
+            
+              this._authStorageService.isLoggedInSub.next(true);
+  
+              this._authStorageService.ip = this.ip;
+              this._authStorageService.tenantId = response.TenantId;
+              this._authStorageService.infraUsuarioId = response.InfraUsuarioId;
+              this._authStorageService.infraEstabId = response.EstabelecimentoId;
+              this._authStorageService.infraEstabNome = response.NomeEstabelecimento;
+              this._authStorageService.infraEmpresaId = response.EmpresaId;
+              this._authStorageService.infraEmpresaNome = response.NomeEmpresa;
+              this._authStorageService.user = login.usuario;
+              this._authStorageService.userName = response.UserName;
+              this._authStorageService.authToken = response.Token;
+              this._authStorageService.dominio = response.Dominio;
+              this._authStorageService.isExternalLogin = false;
+          
+              // Método com customizações para inicializações do Login
+              this._customLoginService.authLogin();
+  
+              if (this._authStorageService.urlRedirect == '' || this._authStorageService.urlRedirect == '/' || this._authStorageService.urlRedirect == '/auth/login') {
+                // Método com customizações para redirecionamento da tela inicial após login ok
+                this._customLoginService.authNavigateToPage(this._router);
+              } else {
+                this._router.navigate([this._authStorageService.urlRedirect]);
+              }
+  
+              this._authStorageService.urlRedirect = "/";
             }
-
-            this._authStorageService.urlRedirect = "/";
+            
           })
           
         );
@@ -155,6 +183,8 @@ login(parmsLogin: LoginForm): Observable<RetLogin> {
               this._authStorageService.infraUsuarioId = response.InfraUsuarioId;
               this._authStorageService.infraEstabId = response.EstabelecimentoId;
               this._authStorageService.infraEstabNome = response.NomeEstabelecimento;
+              this._authStorageService.infraEmpresaId = response.EmpresaId;
+              this._authStorageService.infraEmpresaNome = response.NomeEmpresa;
               this._authStorageService.user = login.usuario;
               this._authStorageService.userName = response.UserName;
               this._authStorageService.authToken = response.Token;
@@ -171,7 +201,7 @@ login(parmsLogin: LoginForm): Observable<RetLogin> {
         );
   }
   
-  logout() {
+  public logout() {
     this._authStorageService.logout();
 
     localStorage.removeItem('configsServerUser');
@@ -185,9 +215,12 @@ login(parmsLogin: LoginForm): Observable<RetLogin> {
 
  public forgottenPassword(parms: ForgottenPasswordForm): Observable<RetError> {
     
-    const params = new HttpParams()
+  this._authStorageService.logout();
+
+  const params = new HttpParams()
       .set('domain', parms.dominioFgtPsw)
       .set('user', parms.usuarioFgtPsw)
+      .set('urlServidor', this.geHostName())
 
     const headers = this._HTTP_HEADERS;
     
@@ -209,12 +242,12 @@ login(parmsLogin: LoginForm): Observable<RetLogin> {
 
   }
 
-  public recoverPassword(dominio: string, usuario: string, parms: RecupPasswordForm): Observable<RetError> {
+  public recoverPassword(dominio: string, usuario: string, parms: NovaSenhaForm): Observable<RetError> {
     
     let recupPassword: PasswordRecup = {
-      password: parms.senhaRecPsw,
-      confirmPassword: parms.confirmSenhaRecPsw,
-      recoverCode: parms.recoverCodeRecPsw
+      password: parms.password,
+      confirmPassword: parms.confirmPassword,
+      code: parms.code
     }
 
     const params = new HttpParams()
@@ -224,6 +257,38 @@ login(parmsLogin: LoginForm): Observable<RetLogin> {
     const headers = this._HTTP_HEADERS;
       
     const url = `${ this._BASE_URL }/RecoverPassword`;
+
+    return this._httpClient
+      .post<RetError>(url, recupPassword, { 'params': params, 'headers': headers })
+        .pipe(
+          take(1),
+          tap((response) => {
+
+            if (response.Error) {
+              throw Error(response.ErrorMessage);
+            }
+
+          })
+        
+    );
+
+  }
+
+  public createPassword(dominio: string, usuario: string, parms: NovaSenhaForm): Observable<RetError> {
+    
+    let recupPassword: PasswordRecup = {
+      password: parms.password,
+      confirmPassword: parms.confirmPassword,
+      code: parms.code
+    }
+
+    const params = new HttpParams()
+      .set('domain', dominio)
+      .set('user', usuario)
+ 
+    const headers = this._HTTP_HEADERS;
+      
+    const url = `${ this._BASE_URL }/CreatePassword`;
 
     return this._httpClient
       .post<RetError>(url, recupPassword, { 'params': params, 'headers': headers })

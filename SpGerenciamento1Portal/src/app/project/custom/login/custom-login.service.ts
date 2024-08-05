@@ -11,36 +11,36 @@ export class CustomLoginService {
   // #region Propriedade Customizadas para o Componente login.component.ts
   
   public get loginTitle(): string {
-    return "Chega de planilhas <br /> e papéis!";
+    return "Organize, Controle, Cresça!";
   }
  
   public get loginSubtitle(): string {
-    return "Você no <strong>controle</strong> <br /> do <strong>ciclo de vida</strong> <br /> dos seus <strong>contratos</strong> <br /> de <strong>onde estiver.</strong>";
-  }    
+    return "Transforme a gestão do seu estoque com eficiência e precisão,<br>impulsionando o sucesso do seu negócio.";
+  }
 
   public get loginLogotipo(): string {
-    return "assets/imgs/logotipo-contratos.png";
-  }    
+    return "assets/imgs/estoque-pronto.png";
+  }
 
   public get loginAltLogotipo(): string {
-    return "Logo - Sispro GerenciamentoEstoque";
-  }    
+    return "SISPRO | Estoque";
+  }
 
   public get loginPageTitle(): string {
-    return "Logo - Sispro GerenciamentoEstoque";
-  }    
+    return "SISPRO | Estoque";
+  }
 
   public get loginDesenvDomain(): string {
     return "ESTAGIOANG12";
-  }    
+  }
 
   public get loginDesenvUser(): string {
     return "admin";
-  }    
+  }
 
   public get loginDesenvPassword(): string {
     return "admin";
-  }    
+  }
 
   // #endregion Propriedade Customizadas para o Componente login.component.ts
 

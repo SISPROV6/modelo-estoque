@@ -7,6 +7,7 @@ import { ProjectUtilservice } from 'src/app/project/utils/project-utils.service'
 
 import { InfraEstabelecimentoFavoritoDefault } from 'src/app/project/models/infra-estabelecimento';
 import { MenuServicesService } from '../../menu-services.service';
+import { CustomMenuService } from 'src/app/project/custom/menu/custom-menu.service';
 
 
 @Component({
@@ -18,9 +19,10 @@ export class SelecaoEstabelecimentosModalComponent implements OnInit {
   constructor(
     private _authStorageService: AuthStorageService,
     private _bsModalService: BsModalService,
+    private _customMenuService: CustomMenuService,
+    private _menuServicesService: MenuServicesService,
     private _messageService: MessageService,
-    private _projectUtilService: ProjectUtilservice,
-    private _menuServicesService: MenuServicesService
+    private _projectUtilService: ProjectUtilservice
   ) { }
 
   ngOnInit(): void {
@@ -136,6 +138,10 @@ export class SelecaoEstabelecimentosModalComponent implements OnInit {
    * @param estabNome Nome do Estabelecimento que será enviado
    */
   public selectEstabelecimento(estabID: string, estabNome: string): void {
+
+    // * Método customizado para emissão de evento ao trocar de estabelecimento
+    this._customMenuService.emitEstabelecimentoEvent();
+
     this.onSelected.emit(estabID + " - " + estabNome);
   }
 

@@ -123,52 +123,7 @@
 				<button type="button" class="btn glb-btn-dark-disabled modal-button" (click)="closeForgottenPasswordModal()">
 					<span> Cancelar </span>
 				</button>
-				<button type="button" class="btn btn-primary modal-button" (click)="sendForgottenPassword(recoverPasswordModal);">
-					<span> Continuar </span>
-				</button>
-			</div>
-
-		</div>
-	</form>
-</ng-template>
-
-<!-- Template do modal da recuperação de senha -->
-<ng-template #recoverPasswordModal>
-	<form [formGroup]="formRecPsw">
-		<div class="modal-content" style="box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.5);">
-			<div class="modal-header p-3">
-				<h4 class="modal-title"> Recuperação de senha </h4>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-					(click)="closeRecoverPasswordModal()">
-				</button>
-			</div>
-			<div class="modal-body">
-				<label for="inputRecoverCodRecPsw" class="input-label"> Código de recuperação <span class="text-danger">*</span></label>
-				<input type="text" id="inputRecoverCodRecPsw" formControlName="recoverCodeRecPsw"
-					class="form-control input-text" aria-label="Sizing example input" aria-label="Código de recuperação"
-					aria-describedby="inputGroup-sizing-lg"
-					[class.is-invalid]="FormUtils.isInvalidField(formRecPsw.get('recoverCodeRecPsw'))">
-				<app-field-error-message [control]="formRecPsw.get('recoverCodeRecPsw')" label="Código de recuperação"></app-field-error-message>				
-
-				<label for="inputSenhaRecPsw" class="input-label"> Digite uma Nova Senha <span class="text-danger">*</span></label>
-				<input type="password" id="inputSenhaRecPsw" formControlName="senhaRecPsw"
-					class="form-control input-text" aria-label="Sizing example input" aria-label="Digite uma Nova Senha"
-					aria-describedby="inputGroup-sizing-lg"
-					[class.is-invalid]="FormUtils.isInvalidField(formRecPsw.get('senhaRecPsw'))">
-				<app-field-error-message [control]="formRecPsw.get('senhaRecPsw')" label="O campo Digite uma Nova Senha"></app-field-error-message>				
-		
-				<label for="inputConfirmSenhaRecPsw" class="input-label"> Confirme sua Nova Senha <span class="text-danger">*</span></label>
-				<input type="password" id="inputConfirmSenhaRecPsw" formControlName="confirmSenhaRecPsw"
-					class="form-control input-text" aria-label="Sizing example input" aria-label="Confirme sua Nova Senha"
-					aria-describedby="inputGroup-sizing-lg"
-					[class.is-invalid]="FormUtils.isInvalidField(formRecPsw.get('confirmSenhaRecPsw'))">
-				<app-field-error-message [control]="formRecPsw.get('confirmSenhaRecPsw')" label="O campo Confirme sua Nova Senha"></app-field-error-message>				
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn glb-btn-dark-disabled modal-button" (click)="closeRecoverPasswordModal()">
-					<span> Cancelar </span>
-				</button>
-				<button type="button" class="btn btn-primary modal-button" (click)="sendRecoverPassword()">
+				<button type="button" class="btn btn-primary modal-button" (click)="sendForgottenPassword();">
 					<span> Continuar </span>
 				</button>
 			</div>

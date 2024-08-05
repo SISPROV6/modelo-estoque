@@ -7,6 +7,9 @@ import { RetError } from 'ngx-sp-infra';
 import { environment } from 'src/environments/environment';
 import { BasicFilters } from 'src/app/project/models/basic-filters';
 import { RetRecordsCombobox } from 'src/app/project/models/combobox/ret-records-combobox';
+import { RetPessoa } from '../models/2Ws/ret-pessoa.model';
+import { PessoasFilters } from '../models/3Rn/pessoasFilters.model';
+import RetPessoasListModel from '../models/2Ws/retPessoasList.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,22 +33,28 @@ export class PessoasService {
 
   // #region PREPARATION
 
-  /** INCOMPLETO */
-  public getPessoasList(basicFilters: BasicFilters): Observable<RetError> {
-    const params = new HttpParams()
-      .set('isAtivo', basicFilters.IS_ATIVO)
-      .set('pesquisa', basicFilters.TEXTO_PESQUISA);
-    
+  public getPessoasList(pessoasFilters: PessoasFilters): Observable<RetPessoasListModel> {
     const headers = this._HTTP_HEADERS;
     
     const url = `${ this._BASE_URL }/GetPessoasList`;
 
-    return this._httpClient.get<RetError>(url, { 'params': params, 'headers': headers })
+    return this._httpClient.post<RetPessoasListModel>(url, JSON.stringify(pessoasFilters), { 'headers': headers })
       .pipe(take(1), tap(response => this.showErrorMessage(response)) );
   }
   // #endregion PREPARATION
 
   // #region GET
+  public getPessoa(pessoaID: string): Observable<RetPessoa> {
+    const params = new HttpParams().set('pessoaID', pessoaID);
+
+    const headers = this._HTTP_HEADERS;
+    
+    const url = `${ this._BASE_URL }/Get`;
+
+    return this._httpClient.get<RetPessoa>(url, { 'params': params, 'headers': headers })
+      .pipe(take(1), tap(response => this.showErrorMessage(response)) );
+  }
+
   public getPessoasCombobox(pesquisa: string): Observable<RetRecordsCombobox> {
     const params = new HttpParams().set('pesquisa', pesquisa);
 
@@ -56,6 +65,7 @@ export class PessoasService {
     return this._httpClient.get<RetRecordsCombobox>(url, { 'params': params, 'headers': headers })
       .pipe(take(1), tap(response => this.showErrorMessage(response)) );
   }
+
   public getPapeisPessoaCombobox(pesquisa: string): Observable<RetRecordsCombobox> {
     const params = new HttpParams().set('pesquisa', pesquisa);
 

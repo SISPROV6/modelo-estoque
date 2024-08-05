@@ -44,6 +44,7 @@ import { PaginationComponent } from './widgets/pagination/pagination.component';
 import { SimpleSearchComponent } from './widgets/simple-search/simple-search.component';
 import { GenericModalComponent } from './widgets/generic-modal/generic-modal.component';
 import { ComboboxMultipleChoiceComponent } from './widgets/combobox-multiple-choice/combobox-multiple-choice.component';
+import { ToastrModule } from 'ngx-toastr';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
 
@@ -100,20 +101,24 @@ defineLocale('pt-br', ptBrLocale);
 		TooltipModule.forRoot(),
 		PopoverModule.forRoot(),
 		SelectDropDownModule,
-        UiSwitchModule,
-        UiSwitchModule.forRoot({
-            size: 'medium',
-            color: '#86c05c',
-            switchColor: '#efefef',
-            defaultBgColor: '#ff6868',
-            defaultBoColor : 'none',
-            checkedLabel: 'Sim',
-            uncheckedLabel: 'Não',
-            checkedTextColor: "#FFF",
-            uncheckedTextColor: "#FFF"
-        }),
-        TabsModule,
-        TimepickerModule,
+		UiSwitchModule,
+		UiSwitchModule.forRoot({
+			size: 'medium',
+			color: '#86c05c',
+			switchColor: '#efefef',
+			defaultBgColor: '#ff6868',
+			defaultBoColor : 'none',
+			checkedLabel: 'Sim',
+			uncheckedLabel: 'Não',
+			checkedTextColor: "#FFF",
+			uncheckedTextColor: "#FFF"
+		}),
+		ToastrModule.forRoot({
+			timeOut: 5000,
+			positionClass: 'toast-bottom-right',
+		}),
+		TabsModule,
+		TimepickerModule,
 		RouterModule,
 		InfraModule,
 		ProjectRoutingModule

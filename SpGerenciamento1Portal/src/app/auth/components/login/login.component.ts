@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
@@ -27,7 +28,8 @@ export class LoginComponent implements OnInit {
 		private _messageService: MessageService,
 		private _authService: AuthService,
 		private _serverService: ServerService,
-		private _title: Title
+		private _title: Title,
+		private _router: Router
 		) { }
 
 	ngOnInit (): void {
@@ -49,7 +51,6 @@ export class LoginComponent implements OnInit {
 
 	// #region PRIVATE
 	private idFgtPsw: number = 1;
-	private idRecPsw: number = 2;
 	// #endregion PRIVATE
 	
 	// #region PUBLIC
@@ -69,7 +70,6 @@ export class LoginComponent implements OnInit {
 	// #region ==========> FORM BUILDER <==========
 	public form: FormGroup;
 	public formFgtPsw: FormGroup;
-	public formRecPsw: FormGroup;
 
 	//  Propriedade necessário para que a classe static FormUtils possa ser utilizada no Html
 	public get FormUtils(): typeof FormUtils {
@@ -96,19 +96,6 @@ export class LoginComponent implements OnInit {
 
 	public get usuarioFgtPsw(): string {
 		return this.formFgtPsw.get('usuarioFgtPsw')?.value;
-	}
-
-	//  Variáveis específicas para funcionalidades padrões dos formulários (RecoverPassword)
-	public get recoverCodeRecPsw(): string {
-		return this.formRecPsw.get('recoverCodeRecPsw')?.value;
-	}
-
-	public get senhaRecPsw(): string {
-		return this.formRecPsw.get('senhaRecPsw')?.value;
-	}
-
-	public get confirmSenhaRecPsw(): string {
-		return this.formRecPsw.get('confirmSenhaRecPsw')?.value;
 	}
 
 	// #endregion FORM DATA
@@ -152,20 +139,6 @@ export class LoginComponent implements OnInit {
 		this.formFgtPsw.get('usuarioFgtPsw')?.setValue('');	
 	}
 
-	//  Método para configuração dos campos de edição do formulário (RecoverPassword)
-	private createFormRecoverPassword(): void {
-
-		this.formRecPsw = this._formBuilder.group({
-			recoverCodeRecPsw: ['', [Validators.required, Validators.maxLength(6)]],
-			senhaRecPsw: ['', [Validators.required, Validators.maxLength(100)]],
-			confirmSenhaRecPsw: ['', [Validators.required, Validators.maxLength(100)]]
-		});
-
-		this.formRecPsw.get('recoverCodeRecPsw')?.setValue('');	
-		this.formRecPsw.get('senhaRecPsw')?.setValue('');	
-		this.formRecPsw.get('confirmSenhaRecPsw')?.setValue('');	
-	}
-
 	// #endregion FORM VALIDATORS
 
 	// #endregion ==========> FORM BUILDER <==========
@@ -205,6 +178,15 @@ export class LoginComponent implements OnInit {
 		this._authService.login(this.form.value).subscribe({
 			next: (response) => {
 				this.isLoading = false;
+
+				if (response.InitializePassword) {
+					let param: string = btoa(`true$${ this.dominio }$${ this.usuario }`);
+	
+					this._router.navigate([`auth/login/novaSenha/${ param }`]);
+			
+					this._messageService.showAlertSuccess('Verifique no seu e-mail o código de validação.');
+				}
+
 			},
 			error: (error) => {
 				this.isLoading = false;
@@ -216,12 +198,12 @@ export class LoginComponent implements OnInit {
 	}
 
 	// Envia requisição para esquecer senha
-	public sendForgottenPassword(templateRecoverPassword: TemplateRef<any>): void {
+	public sendForgottenPassword(): void {
 
 		if (this.formFgtPsw.valid) {
 			this._serverService.getServer().subscribe({
 				next: response => {
-					this.forgottenPassword(templateRecoverPassword);
+					this.forgottenPassword();
 				},
 				error: (error) => {
 					this._projectUtilservice.showHttpError(error);
@@ -235,50 +217,17 @@ export class LoginComponent implements OnInit {
 	}
 
 	// Requisição para esquecer senha
-	public forgottenPassword(templateRecoverPassword: TemplateRef<any>): void {
+	public forgottenPassword(): void {
 
 		this._authService.forgottenPassword(this.formFgtPsw.value).subscribe({
 			next: (response) => {
 				this.closeForgottenPasswordModal();
 
-				this.openRecoverPasswordModal(templateRecoverPassword);
+				let param: string = btoa(`false$${ this.dominio }$${ this.usuario }`);
 
-				this._messageService.showAlertSuccess('Verifique no seu e-mail o código de recuperação.');
-			},
-			error: (error) => {
-				this._projectUtilservice.showHttpError(error);
-			},
-		});
+				this._router.navigate([`auth/login/novaSenha/${ param }`]);
 
-	}
-
-	// Envia requisição para recuperar de senha
-	public sendRecoverPassword(): void {
-
-		if (this.formRecPsw.valid) {
-			this._serverService.getServer().subscribe({
-				next: response => {
-					this.recoverPassword();
-				},
-				error: (error) => {
-					this._projectUtilservice.showHttpError(error);
-				},
-			})
-
-		} else {
-			FormUtils.validateFields(this.formRecPsw);
-		}
-
-	}
-
-	// Recuperar senha
-	public recoverPassword(): void {
-
-		this._authService.recoverPassword(this.dominioFgtPsw, this.usuarioFgtPsw, this.formRecPsw.value).subscribe({
-			next: (response) => {
-				this.closeRecoverPasswordModal();
-
-				this._messageService.showAlertSuccess('Senha alterada com sucesso. Efetue o Login.');
+				this._messageService.showAlertSuccess('Verifique no seu e-mail o código de validação.');
 			},
 			error: (error) => {
 				this._projectUtilservice.showHttpError(error);
@@ -311,24 +260,6 @@ export class LoginComponent implements OnInit {
 		this._bsModalService.hide(this.idFgtPsw);
 	}
 	
-	// Executa recuperar senha
-	public openRecoverPasswordModal(template: TemplateRef<any>): void {
-		this.createFormRecoverPassword();
-
-		this.modalRef = this._bsModalService.show( template, {
-			class: 'modal-dialog-centered',
-			ignoreBackdropClick: false,
-			keyboard: false,
-			id: this.idRecPsw
-		} );
-
-	}
-
-	// Encerra recuperar senha
-	public closeRecoverPasswordModal(): void {
-		this._bsModalService.hide(this.idRecPsw);
-	}
-
 	// #endregion ==========> MODALS <==========
 
 }
