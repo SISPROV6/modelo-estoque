@@ -10,9 +10,9 @@ using SpInfra5WSUtils.Session;
 using SpInfra8Log;
 using SpInfra9Utils.Exceptions.WebServicesException;
 using SpInfra4Generics.Models.Combobox;
-using SpEst3Gerenciamento.RegraNegocio;
+using SpEst3Gerenciamento12.RegraNegocio;
 
-namespace SpExemplo2PublicWS.Controllers
+namespace SpEst2GerenciamentoWS.Controllers
 {
     //  Rota da API
     [RoutePrefix("api/EstCategoriaProduto")]

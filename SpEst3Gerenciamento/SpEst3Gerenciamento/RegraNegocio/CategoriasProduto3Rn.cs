@@ -7,7 +7,7 @@ using SpInfra8DataAccess;
 using SpInfra8DataAccess.Model;
 using SpInfra9Utils;
 
-namespace SpEst3Gerenciamento.RegraNegocio
+namespace SpEst3Gerenciamento12.RegraNegocio
 {
     public class CategoriasProduto3Rn : DalBaseModel
     {

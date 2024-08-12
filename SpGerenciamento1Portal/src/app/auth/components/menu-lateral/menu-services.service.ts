@@ -11,7 +11,7 @@ import { Usuario_IMG } from './model/usuario-img';
 import { RetInfraUsuarioEmail } from './model/ret-infrausuarioemail';
 import { RetEstabelecimentosModal } from 'src/app/project/models/ret-estabelecimentos';
 import { RetInfraUsuarioImg } from './model/ret-infrausuarioimg';
-import { RetRecordCombobox } from 'src/app/project/models/combobox/ret-records-combobox';
+import { RetEstabelecimentoSession } from './model/ret-estabelecimento-session';
 
 @Injectable({
   providedIn: 'root'
@@ -83,14 +83,14 @@ export class MenuServicesService {
   // #endregion Menu: Usuário
 
   // #region Menu: Estabelecimentos
-  public getEstabelecimentoSession(estabID: string): Observable<RetRecordCombobox> {
+  public getEstabelecimentoSession(estabID: string): Observable<RetEstabelecimentoSession> {
     const params = new HttpParams()
       .set('id', estabID);
 
     const url = `${this._BASE_URL}/InfraEstabelecimento/GetEstabelecimentoSession`;
 
     return this._httpClient
-      .get<RetRecordCombobox>(url, { 'params': params, 'headers': this._HTTP_HEADERS })
+      .get<RetEstabelecimentoSession>(url, { 'params': params, 'headers': this._HTTP_HEADERS })
       .pipe(
         take(1),
         tap(response => {

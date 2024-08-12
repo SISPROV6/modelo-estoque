@@ -123,8 +123,14 @@ export class MenuLateralComponent implements OnInit {
   // #region GET
   private getEstabelecimentoSession(estabID: string): void {
     this._menuServices.getEstabelecimentoSession(estabID).subscribe({
-      next: response => { this.nomeEstabelecimento = response.Record.LABEL; },
-      error: error => { this._projectUtilService.showHttpError(error); }
+      next: response => { 
+        this.nomeEstabelecimento = response.InfraEstabNome; 
+        this._authStorageService.infraEmpresaId = response.InfraEmpresaId;
+        this._authStorageService.infraEmpresaNome = response.InfraEmpresaNome;
+      },
+      error: error => { 
+        this._projectUtilService.showHttpError(error); 
+      }
     })
   }
 
@@ -148,6 +154,7 @@ export class MenuLateralComponent implements OnInit {
     this._menuServices.updateLastLogEstabID(estab.split(" - ")[0]).subscribe({
       next: () => {
         this._messageService.showAlertSuccess('Estabelecimento alterado com sucesso!');
+
         this.getEstabelecimentoSession(estab.split(" - ")[0]);
       }
     })

@@ -1,12 +1,16 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 
 @Component({
   selector: "app-simple-header",
   templateUrl: "./simple-header.component.html",
   styleUrls: ["./simple-header.component.scss"]
 })
-export class SimpleHeaderComponent implements OnChanges {
+export class SimpleHeaderComponent implements OnInit, OnChanges {
   constructor() { }
+
+  ngOnInit(): void {
+    console.log(this.buttonToOmit);
+  }
 
   ngOnChanges (): void {
     switch(this.mode) {
@@ -69,7 +73,7 @@ export class SimpleHeaderComponent implements OnChanges {
    * Opção que deve ser informada caso você deseje que um dos botões seja escondido
    * @default null
    */
-  @Input() public buttonToOmit: "Todos" | "Cancelar" | "Salvar" | string | null = null;
+  @Input() public buttonToOmit: "Todos" | "Cancelar" | "Salvar" | null = null;
 
   /**
    * Opção que dev ser informada caso você deseje utilizar as cores e estilos do novo visual do Contratos do Figma

@@ -4,5 +4,5 @@ import { InfraUsuarioImg } from './infrausuarioimg';
 export class RetInfraUsuarioEmail implements IError{
   Error: boolean;
   ErrorMessage: string;
-  Email: string = ''
+  Email: string = "";
 }

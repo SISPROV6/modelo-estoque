@@ -6,8 +6,11 @@ export class RetLogin implements IError {
   TenantId: number;
   EstabelecimentoId: string;
   NomeEstabelecimento: string;
+  EmpresaId: string;
+  NomeEmpresa: string;
   InfraUsuarioId: string;
   UserName: string;
   Token: string;
   Dominio: string;
+  InitializePassword: boolean;
 }

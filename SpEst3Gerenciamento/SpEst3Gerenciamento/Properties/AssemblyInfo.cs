@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // As informações gerais sobre um assembly são controladas por
 // conjunto de atributos. Altere estes valores de atributo para modificar as informações
 // associada a um assembly.
-[assembly: AssemblyTitle("SpEst3Gerenciamento")]
+[assembly: AssemblyTitle("SpEst3Gerenciamento12")]
 [assembly: AssemblyDescription("Estágio - Regras de Negócio")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SISPRO S/A - Serviços e Tecnologia da Informação")]

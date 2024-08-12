@@ -19,7 +19,14 @@ const routes: Routes = [
 				canActivate: [AuthGuard],
 				canLoad: [AuthGuard]
 			},
-			{ 
+			{
+				path: "grupos",
+				loadChildren: () => 
+					import('./aplic/grupos/modules/grupos.module').then( m => m.GruposModule),
+				canActivate: [AuthGuard],
+				canLoad: [AuthGuard]
+			},
+			{
 				path: "painel-pessoas",
 				loadChildren: () => 
 					import('./aplic/pessoas/modules/pessoas.module').then( m => m.PessoasModule),

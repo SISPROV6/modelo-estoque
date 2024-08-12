@@ -12,8 +12,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SpExemplo2PublicWS</RootNamespace>
-    <AssemblyName>SpExemplo2PublicWS</AssemblyName>
+    <RootNamespace>SpEst2GerenciamentoWS</RootNamespace>
+    <AssemblyName>SpEst2GerenciamentoWS</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
@@ -75,13 +75,14 @@
     <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="SpEst3Gerenciamento">
-      <HintPath>..\..\..\..\..\Bin\SpEst3Gerenciamento.dll</HintPath>
+    <Reference Include="SpEst3Gerenciamento12">
+      <HintPath>..\..\..\..\..\Bin\SpEst3Gerenciamento12.dll</HintPath>
     </Reference>
     <Reference Include="SpEstGerenciamento7Db">
       <HintPath>..\..\..\..\..\Bin\SpEstGerenciamento7Db.dll</HintPath>
     </Reference>
-    <Reference Include="SpInfra4Generics">
+    <Reference Include="SpInfra4Generics, Version=1.0.0.1000, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Bin\SpInfra4Generics.dll</HintPath>
     </Reference>
     <Reference Include="SpInfra5WSUtils">
@@ -237,12 +238,14 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\EstCategoriaProdutoController.cs" />
-    <Compile Include="Controllers\ExemploController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\Pessoas\PessoasController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\RetExemplo.cs" />
+    <Compile Include="Models\Pessoas\RetPessoa.cs" />
+    <Compile Include="Models\Pessoas\RetPessoas.cs" />
+    <Compile Include="Models\Pessoas\RetPessoasListModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

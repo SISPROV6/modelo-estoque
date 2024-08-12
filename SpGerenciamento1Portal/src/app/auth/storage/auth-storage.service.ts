@@ -50,6 +50,8 @@ export class AuthStorageService {
       this.__infraUsuarioId = localAuthStorage.__infraUsuarioId;
       this.__infraEstabId = localAuthStorage.__infraEstabId;
       this.__infraEstabNome = localAuthStorage.__infraEstabNome;
+      this.__infraEmpresaId = localAuthStorage.__infraEmpresaId;
+      this.__infraEmpresaNome = localAuthStorage.__infraEmpresaNome;
       this.__user = localAuthStorage.__user;
       this.__userName = localAuthStorage.__userName;
       this.__tokenPayload = localAuthStorage.__tokenPayload;
@@ -130,6 +132,32 @@ export class AuthStorageService {
 
   public set infraEstabNome(value: string) {
     this.__infraEstabNome = value;
+
+    this.__saveLocalInstance();
+  }
+
+  // EmpresaID
+  private __infraEmpresaId: string = "";
+
+  public get infraEmpresaId(): string {
+    return this.__infraEmpresaId;
+  }
+
+  public set infraEmpresaId(value: string) {
+    this.__infraEmpresaId = value;
+
+    this.__saveLocalInstance();
+  }
+
+  // NomeEmpresa
+  private __infraEmpresaNome: string = "";
+
+  public get infraEmpresaNome(): string {
+    return this.__infraEmpresaNome;
+  }
+
+  public set infraEmpresaNome(value: string) {
+    this.__infraEmpresaNome = value;
 
     this.__saveLocalInstance();
   }
@@ -271,6 +299,8 @@ export class AuthStorageService {
       "__infraUsuarioId": "${this.infraUsuarioId}",
       "__infraEstabId": "${this.infraEstabId}",
       "__infraEstabNome": "${this.infraEstabNome}",
+      "__infraEmpresaId": "${this.infraEmpresaId}",
+      "__infraEmpresaNome": "${this.infraEmpresaNome}",
       "__user": "${this.user}",
       "__userName": "${this.userName}",
       "__authToken": "${this.authToken}",
@@ -355,6 +385,8 @@ export class AuthStorageService {
     this.__infraUsuarioId = "";
     this.__infraEstabId = "";
     this.__infraEstabNome = "";
+    this.__infraEmpresaId = "";
+    this.__infraEmpresaNome = "";
     this.__user = "";
     this.__userName = "";
     this.__authToken = "";

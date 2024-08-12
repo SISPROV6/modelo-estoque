@@ -15,6 +15,7 @@ import { DynamicMenuComponent } from './components/menu-lateral/submenus/dynamic
 import { NotifSubmenuComponent } from './components/menu-lateral/submenus/notif-submenu/notif-submenu.component';
 import { SearchSubmenuComponent } from './components/menu-lateral/submenus/search-submenu/search-submenu.component';
 import { SecondSubmenuComponent } from './components/menu-lateral/submenus/second-submenu/second-submenu.component';
+import { NovaSenhaComponent } from './components/nova-senha/nova-senhacomponent';
 
 @NgModule({
   declarations: [
@@ -26,17 +27,19 @@ import { SecondSubmenuComponent } from './components/menu-lateral/submenus/secon
     SearchSubmenuComponent,
     NotifSubmenuComponent,
     PrimaryDropdownComponent,
-    SecondaryDropdownComponent
+    SecondaryDropdownComponent,
+    NovaSenhaComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-     ProjectModule,
+    ProjectModule,
     AuthRoutingModule
   ],
   exports: [
-    SelecaoEstabelecimentosModalComponent
+    SelecaoEstabelecimentosModalComponent,
+    NovaSenhaComponent
   ],
 
 })
