@@ -8,9 +8,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angu
 export class SimpleHeaderComponent implements OnInit, OnChanges {
   constructor() { }
 
-  ngOnInit(): void {
-    console.log(this.buttonToOmit);
-  }
+  ngOnInit(): void {  }
 
   ngOnChanges (): void {
     switch(this.mode) {

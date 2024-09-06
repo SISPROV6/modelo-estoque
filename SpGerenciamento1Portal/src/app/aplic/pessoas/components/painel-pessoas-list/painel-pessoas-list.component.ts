@@ -28,7 +28,6 @@ export class PainelPessoasListComponent implements OnInit {
 	public $pessoasList: PessoasListModel[];
   public pessoasFilters: PessoasFilters = new PessoasFilters();
 
-	public counter: number = 0;
 	public page: number = 1;
 	public itemsPerPage: number = 10;
   // #endregion PUBLIC
@@ -69,9 +68,6 @@ export class PainelPessoasListComponent implements OnInit {
 		this._pessoasService.getPessoasList(this.pessoasFilters).subscribe({
 			next: response => {
 				this.$pessoasList = response.PessoasList;
-
-				this.counter = this.$pessoasList.length;
-				this.resetPagination(this.$pessoasList);
 			},
 			error: error => {
 				this._projectUtilService.showHttpError(error);

@@ -1,21 +1,19 @@
-﻿using SpEst2GerenciamentoWS.Models.Pessoas;
+﻿using System;
+using System.Net;
+using System.Web.Http;
+using System.Web.Http.Description;
+
+using Swashbuckle.Swagger.Annotations;
+
+using SpEst2GerenciamentoWS.Models.Pessoas;
 using SpEst3Gerenciamento12.RegraNegocio;
 using SpEst3Gerenciamento12.RegraNegocio.Models;
 using SpEstGerenciamento7Db.Database;
-using SpInfra4Generics.Generics.Models;
 using SpInfra4Generics.Models.Combobox;
 using SpInfra5WSUtils.Filters;
 using SpInfra5WSUtils.Session;
 using SpInfra8Log;
 using SpInfra9Utils.Exceptions.WebServicesException;
-using Swashbuckle.Swagger.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Description;
 
 namespace SpEst2GerenciamentoWS.Controllers.Pessoas
 {
